@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: movie-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/movie_db
+    username: root
+    password: Vamshi@8267
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

@@ -1,0 +1,70 @@
+package com.project.movie_service.movieController;
+
+import com.project.movie_service.dto.CreateMovieRequest;
+import com.project.movie_service.dto.MovieResponse;
+import com.project.movie_service.dto.MovieStatusUpdateRequest;
+import com.project.movie_service.dto.UpdateMovieRequest;
+import com.project.movie_service.services.MovieService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/movies")
+@RequiredArgsConstructor
+public class MovieController {
+
+    private final MovieService movieService;
+
+    @PostMapping
+    public ResponseEntity<MovieResponse> createMovie(
+            @Valid @RequestBody CreateMovieRequest request) {
+
+        MovieResponse response = movieService.createMovie(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{movieId}")
+    public ResponseEntity<MovieResponse> getMovie(
+            @PathVariable Long movieId) {
+
+        MovieResponse response = movieService.getMovie(movieId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MovieResponse>> getMovies() {
+
+        List<MovieResponse> responses = movieService.getMovies();
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @PutMapping("/{movieId}")
+    public ResponseEntity<MovieResponse> updateMovie(
+            @PathVariable Long movieId,
+            @Valid @RequestBody UpdateMovieRequest request) {
+
+        MovieResponse response =
+                movieService.updateMovie(movieId, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{movieId}/status")
+    public ResponseEntity<MovieResponse> updateMovieStatus(
+            @PathVariable Long movieId,
+            @Valid @RequestBody MovieStatusUpdateRequest request) {
+
+        MovieResponse response =
+                movieService.updateMovieStatus(movieId, request.getStatus());
+
+        return ResponseEntity.ok(response);
+    }
+}
