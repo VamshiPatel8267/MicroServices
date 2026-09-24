@@ -4,12 +4,17 @@ import com.project.movie_service.dto.CreateMovieRequest;
 import com.project.movie_service.dto.MovieResponse;
 import com.project.movie_service.dto.MovieStatusUpdateRequest;
 import com.project.movie_service.dto.UpdateMovieRequest;
+import com.project.movie_service.entity.MovieStatus;
 import com.project.movie_service.services.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -39,11 +44,14 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getMovies() {
+    public ResponseEntity<Page<MovieResponse>> getMovies(@RequestParam(required = false) MovieStatus status, @PageableDefault(size = 20) Pageable pageable) {
+        if(pageable.getPageSize()>100){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            Page<MovieResponse> responses = movieService.getMovies(status, pageable);
+            return ResponseEntity.ok(responses);
+        }
 
-        List<MovieResponse> responses = movieService.getMovies();
-
-        return ResponseEntity.ok(responses);
     }
 
     @PutMapping("/{movieId}")
