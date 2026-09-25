@@ -47,15 +47,14 @@ public class MovieService {
 
     public Page<MovieResponse> getMovies(MovieStatus status,Pageable pageable){
         Page<Movie> movies;
+
         if(status != null){
             movies = movieRepository.findByStatus(status, pageable);
-            movies.map(movieMapper::toResponse);
+            return movies.map(movieMapper::toResponse);
         }else{
             movies = movieRepository.findAll(pageable);
-            movies.map(movieMapper::toResponse);
+            return movies.map(movieMapper::toResponse);
         }
-
-        return null;
 
     }
 

@@ -5,6 +5,7 @@ import com.project.movie_service.dto.MovieResponse;
 import com.project.movie_service.dto.MovieStatusUpdateRequest;
 import com.project.movie_service.dto.UpdateMovieRequest;
 import com.project.movie_service.entity.MovieStatus;
+import com.project.movie_service.exception.InvalidPaginationException;
 import com.project.movie_service.services.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,9 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<Page<MovieResponse>> getMovies(@RequestParam(required = false) MovieStatus status, @PageableDefault(size = 20) Pageable pageable) {
-        if(pageable.getPageSize()>100){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else{
+        if(pageable.getPageSize()>=100){
+            throw new InvalidPaginationException("Page cannot exceed 100");
+        } else{
             Page<MovieResponse> responses = movieService.getMovies(status, pageable);
             return ResponseEntity.ok(responses);
         }
