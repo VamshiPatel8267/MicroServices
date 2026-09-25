@@ -11,6 +11,7 @@ import com.project.movie_service.mapper.MovieMapper;
 import com.project.movie_service.repository.MovieRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-
 public class MovieService {
 
 
@@ -36,11 +37,13 @@ public class MovieService {
         movie.setCreatedAt(now);
         movie.setUpdatedAt(now);
         Movie createdMovie =  movieRepository.save(movie);
+        log.info(String.format("Movie Created with id %d and name %s", createdMovie.getId(), createdMovie.getTitle()));
         return movieMapper.toResponse(createdMovie);
     }
 
     public MovieResponse getMovie(Long id){
         Movie movie = movieRepository.findById(id).orElseThrow(()-> new MovieNotFoundException(String.format("Movie with id %d not found", id)));
+        log.warn("Movie with id not found");
         MovieResponse response = movieMapper.toResponse(movie);
         return response;
     }
@@ -61,12 +64,14 @@ public class MovieService {
     public MovieResponse updateMovie(Long id , UpdateMovieRequest request){
         Movie movie = movieRepository.findById(id).orElseThrow(()-> new MovieNotFoundException(String.format("Movie with Id %d NOT Found", id)));
         movieMapper.updateEntity(request,movie);
+        movie.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
         Movie updatedMovie = movieRepository.save(movie);
         return movieMapper.toResponse(updatedMovie);
     }
 
     public MovieResponse updateMovieStatus(Long id , MovieStatus status){
         Movie movie = movieRepository.findById(id).orElseThrow(()-> new MovieNotFoundException(String.format("Movie with Id %d NOT Found", id)));
+        movie.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
         movie.setStatus(status);
         Movie savedMovie = movieRepository.save(movie);
         return movieMapper.toResponse(savedMovie);

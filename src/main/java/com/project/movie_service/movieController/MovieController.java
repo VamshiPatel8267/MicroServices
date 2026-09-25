@@ -46,7 +46,7 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<Page<MovieResponse>> getMovies(@RequestParam(required = false) MovieStatus status, @PageableDefault(size = 20) Pageable pageable) {
-        if(pageable.getPageSize()>=100){
+        if (pageable.getPageSize() > 100) {
             throw new InvalidPaginationException("Page cannot exceed 100");
         } else{
             Page<MovieResponse> responses = movieService.getMovies(status, pageable);
