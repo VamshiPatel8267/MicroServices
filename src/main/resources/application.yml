@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: theatre-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/theatre_db
+    username: root
+    password: Vamshi@8267
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8082
