@@ -5,7 +5,10 @@ import com.project.theatre_service.dto.theatre.TheatreResponse;
 import com.project.theatre_service.dto.theatre.UpdateTheatreRequest;
 import com.project.theatre_service.entity.city.City;
 import com.project.theatre_service.entity.theatre.Theatre;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class TheatreMapper {
 
     public Theatre toEntity(CreateTheatreRequest request, City city){

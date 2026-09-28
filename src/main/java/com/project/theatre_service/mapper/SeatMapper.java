@@ -5,10 +5,13 @@ import com.project.theatre_service.dto.seat.SeatResponse;
 import com.project.theatre_service.dto.seat.UpdateSeatRequest;
 import com.project.theatre_service.entity.screen.Screen;
 import com.project.theatre_service.entity.seat.Seat;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class SeatMapper {
 
-    public Seat toEnity(CreateSeatRequest request, Screen screen){
+    public Seat toEntity(CreateSeatRequest request, Screen screen){
         Seat seat = new Seat();
         seat.setRowLabel(request.getRowLabel());
         seat.setSeatNumber(request.getSeatNumber());

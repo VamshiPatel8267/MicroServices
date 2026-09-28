@@ -3,8 +3,9 @@ package com.project.theatre_service.mapper;
 import com.project.theatre_service.dto.city.CityResponse;
 import com.project.theatre_service.dto.city.CreateCityRequest;
 import com.project.theatre_service.entity.city.City;
-import com.project.theatre_service.entity.city.CityStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CityMapper {
 
     public City toEntity(CreateCityRequest request){
@@ -22,15 +23,11 @@ public class CityMapper {
         response.setName(city.getName());
         response.setStatus(city.getStatus().name());
         response.setCountry(city.getCountry());
+        response.setState(city.getState());
         response.setCreatedAt(city.getCreatedAt());
         response.setUpdatedAt(city.getUpdatedAt());
 
         return response;
     }
 
-    public City updateStatus(CityStatus status){
-       City city = new City();
-       city.setStatus(status);
-        return city;
-    }
 }
