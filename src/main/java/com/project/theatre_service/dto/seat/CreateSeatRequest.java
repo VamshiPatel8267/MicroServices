@@ -23,10 +23,3 @@ public class CreateSeatRequest {
 }
 
 
-/*
-* | Field      | Type       | Validation                     |
-| ---------- | ---------- | ------------------------------ |
-| rowLabel   | `String`   | `@NotBlank`, `@Size(max = 10)` |
-| seatNumber | `Integer`  | `@NotNull`, `@Positive`        |
-| seatType   | `SeatType` | `@NotNull`                     |
-*/
