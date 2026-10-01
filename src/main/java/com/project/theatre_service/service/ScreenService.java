@@ -7,7 +7,11 @@ import com.project.theatre_service.dto.screen.UpdateScreenRequest;
 import com.project.theatre_service.entity.screen.Screen;
 import com.project.theatre_service.entity.screen.ScreenStatus;
 import com.project.theatre_service.entity.theatre.Theatre;
+import com.project.theatre_service.entity.theatre.TheatreStatus;
+import com.project.theatre_service.exception.InactiveTheatreException;
 import com.project.theatre_service.mapper.ScreenMapper;
+import com.project.theatre_service.exception.TheatreNotFoundException;
+import com.project.theatre_service.exception.ScreenNotFoundException;
 import com.project.theatre_service.repository.ScreenRepository;
 import com.project.theatre_service.repository.TheatreRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +31,26 @@ public class ScreenService {
 
     public ScreenResponse createScreen(Long theatreId , CreateScreenRequest request){
 
-        Theatre theatre = theatreRepository.findById(theatreId).orElseThrow();
-        Screen screen = screenMapper.toEntity(request, theatre);
-        screen.setStatus(ScreenStatus.ACTIVE);
-        screen.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
-        screen.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
+        Theatre theatre = theatreRepository.findById(theatreId).orElseThrow(() -> new TheatreNotFoundException("Theatre not found with ID: " + theatreId));
+        if(theatre.getStatus() == TheatreStatus.INACTIVE ){
+            throw new InactiveTheatreException("Theatre is INACTIVE");
 
-        Screen savedScreen = screenRepository.save(screen);
+        }else{
+            Screen screen = screenMapper.toEntity(request, theatre);
+            screen.setStatus(ScreenStatus.ACTIVE);
+            screen.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
+            screen.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
 
-        return screenMapper.toResponse(savedScreen);
+            Screen savedScreen = screenRepository.save(screen);
+
+            return screenMapper.toResponse(savedScreen);
+        }
+
     }
 
 
     public ScreenResponse getScreen(Long id){
-        Screen screen=screenRepository.findById(id).orElseThrow();
+        Screen screen=screenRepository.findById(id).orElseThrow(() -> new ScreenNotFoundException("Screen not found with ID: " + id));
         return screenMapper.toResponse(screen);
     }
 
@@ -50,7 +60,7 @@ public class ScreenService {
     }
 
     public ScreenResponse updateScreen(Long id, UpdateScreenRequest request){
-        Screen screen = screenRepository.findById(id).orElseThrow();
+        Screen screen = screenRepository.findById(id).orElseThrow(() -> new ScreenNotFoundException("Screen not found with ID: " + id));
         screenMapper.updateEntity(request, screen);
         screen.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
         Screen savedScreen = screenRepository.save(screen);
@@ -62,9 +72,7 @@ public class ScreenService {
             ScreenStatusUpdateRequest request) {
 
         Screen screen = screenRepository.findById(screenId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Screen not found with ID: " + screenId));
+                .orElseThrow(() -> new ScreenNotFoundException("Screen not found with ID: " + screenId));
 
         screen.setStatus(request.getStatus());
         screen.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));

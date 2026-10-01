@@ -46,7 +46,7 @@ public class ScreenController {
 
     @PatchMapping("/{screenId}/status")
     public ResponseEntity<ScreenResponse> updateStatus(@PathVariable Long screenId,
-                                                       @RequestBody ScreenStatusUpdateRequest request){
+                                                       @Valid @RequestBody ScreenStatusUpdateRequest request){
         ScreenResponse response = screenService.updateScreenStatus(screenId, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
