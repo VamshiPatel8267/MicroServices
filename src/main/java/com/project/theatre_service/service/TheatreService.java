@@ -8,7 +8,6 @@ import com.project.theatre_service.entity.city.City;
 import com.project.theatre_service.entity.city.CityStatus;
 import com.project.theatre_service.entity.theatre.Theatre;
 import com.project.theatre_service.exception.TheatreNotFoundException;
-import com.project.theatre_service.mapper.CityMapper;
 import com.project.theatre_service.mapper.TheatreMapper;
 import com.project.theatre_service.repository.CityRepository;
 import com.project.theatre_service.repository.TheatreRepository;
